@@ -9,7 +9,7 @@ public class SimpleStatsModel {
   private int max;
   private double mean;
 
-  public SimpleStatsModel(List<Updatable> observers) {
+  public SimpleStatsModel(ArrayList<Updatable> observers) {
     this.observers = observers;
   }
 

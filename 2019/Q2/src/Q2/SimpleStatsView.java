@@ -9,7 +9,7 @@ import java.util.List;
 public class SimpleStatsView implements Updatable {
 
   private static final int MAX_INTEGER = 12;
-  private final SimpleStatsModel model = new SimpleStatsModel(List.of(this));
+  private final SimpleStatsModel model = new SimpleStatsModel(new ArrayList<>(List.of(this)));
 
   /* View components as fields */
   private final JFrame frame;

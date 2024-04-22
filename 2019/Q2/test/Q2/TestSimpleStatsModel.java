@@ -1,7 +1,12 @@
 package Q2;
 
+import org.jmock.Expectations;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -10,7 +15,10 @@ import static org.hamcrest.CoreMatchers.is;
 
 public class TestSimpleStatsModel {
 
-  private final SimpleStatsModel model = new SimpleStatsModel(List.of());
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
+  Updatable view = context.mock(Updatable.class);
+  private final SimpleStatsModel model = new SimpleStatsModel(new ArrayList<>(List.of()));
 
   @Test
   public void maxTermAtInitialisationIsZero() {
@@ -42,4 +50,20 @@ public class TestSimpleStatsModel {
     assertThat(model.getMax(), is(9));
   }
 
+  @Test
+  public void updatesToModelIsPropagatedToObserver() {
+    context.checking(new Expectations() {{
+      exactly(1).of(view).update(model);
+    }});
+    model.addObserver(view);
+    model.addNum(10);
+  }
+
+  @Test
+  public void updatesToModelIsNotPropagatedIfNoObserversExist() {
+    context.checking(new Expectations() {{
+      exactly(0).of(view).update(model);
+    }});
+    model.addNum(10);
+  }
 }
