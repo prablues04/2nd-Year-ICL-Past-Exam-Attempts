@@ -1,6 +1,6 @@
 package Q1;
 
-public class BillingSystem {
+public class BillingSystem implements Bill {
 
   private static final BillingSystem INSTANCE = new BillingSystem();
 
@@ -8,6 +8,7 @@ public class BillingSystem {
     return INSTANCE;
   }
 
+  @Override
   public void addBillItem(String caller, String callee, long callCostInPence) {
 
     // Imagine lots more code here that really does payment processing - we

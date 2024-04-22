@@ -6,8 +6,8 @@ is an efferent coupling as PhoneCall depends on BillingSystem's implementation.
 also an efferent coupling as PhoneCall references the LocalTime class and depends on it for
 correctness (but not the other way around)
 
-(iii) The main disadvantage of these efferent couplings is a lack of reusability or extensibility to
- the code. For example, it is not possible to easily switch to a different billing system due to
- specifically referring to the current one. Similarly, we may want to modify the way time is
- measured e.g. for mock testing but cannot do so easily. Additionally the same phone call code
- cannot be used in another system due to a lack of abstraction.
+(iii) The main disadvantage of these efferent couplings is a lack of re-usability or extensibility
+to the code. For example, it is not possible to easily switch to a different billing system due to
+specifically referring to the current one. Similarly, we may want to modify the way time is measured
+e.g. for mock testing but cannot do so easily. Additionally, the same phone call code cannot be
+used in another system due to a lack of abstraction.
