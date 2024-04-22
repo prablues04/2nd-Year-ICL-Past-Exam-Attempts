@@ -38,32 +38,6 @@ public class PhoneCallTest {
   }
 
   @Test
-  public void callStartingBeforePeakChargedOffPeak() {
-    clock.setClockStart(LocalTime.of(8, 30));
-    call.start();
-    clock.advanceTime(3, HOURS);
-    call.end();
-    Long cost = clock.getDuration() * call.getOffPeakRate();
-    context.checking(new Expectations() {{
-      exactly(1).of(bill).addBillItem(caller, callee, cost);
-    }});
-    call.charge();
-  }
-
-  @Test
-  public void callEndingWhenOffPeakChargedOffPeak() {
-    clock.setClockStart(LocalTime.of(9, 30));
-    call.start();
-    clock.advanceTime(12, HOURS);
-    call.end();
-    Long cost = clock.getDuration() * call.getOffPeakRate();
-    context.checking(new Expectations() {{
-      exactly(1).of(bill).addBillItem(caller, callee, cost);
-    }});
-    call.charge();
-  }
-
-  @Test
   public void callOnlyInOffPeakChargedForOffPeak() {
     clock.setClockStart(LocalTime.of(6, 30));
     call.start();
@@ -76,12 +50,79 @@ public class PhoneCallTest {
     call.charge();
   }
 
-  public void callSurroundingPeakHoursChargedOffPeak() {
+// Tests for part 1b:
+//  @Test
+//  public void callStartingBeforePeakChargedOffPeak() {
+//    clock.setClockStart(LocalTime.of(8, 30));
+//    call.start();
+//    clock.advanceTime(3, HOURS);
+//    call.end();
+//    Long cost = clock.getDuration() * call.getOffPeakRate();
+//    context.checking(new Expectations() {{
+//      exactly(1).of(bill).addBillItem(caller, callee, cost);
+//    }});
+//    call.charge();
+//  }
+//  @Test
+//  public void callEndingWhenOffPeakChargedOffPeak() {
+//    clock.setClockStart(LocalTime.of(9, 30));
+//    call.start();
+//    clock.advanceTime(12, HOURS);
+//    call.end();
+//    Long cost = clock.getDuration() * call.getOffPeakRate();
+//    context.checking(new Expectations() {{
+//      exactly(1).of(bill).addBillItem(caller, callee, cost);
+//    }});
+//    call.charge();
+//  }
+//
+//
+//  @Test
+//  public void callSurroundingPeakHoursChargedOffPeak() {
+//    clock.setClockStart(LocalTime.of(8, 30));
+//    call.start();
+//    clock.advanceTime(12, HOURS);
+//    call.end();
+//    Long cost = clock.getDuration() * call.getOffPeakRate();
+//    context.checking(new Expectations() {{
+//      exactly(1).of(bill).addBillItem(caller, callee, cost);
+//    }});
+//    call.charge();
+//  }
+
+  @Test
+  public void callStartingBeforePeakChargedPeak() {
+    clock.setClockStart(LocalTime.of(8, 30));
+    call.start();
+    clock.advanceTime(3, HOURS);
+    call.end();
+    Long cost = clock.getDuration() * call.getPeakRate();
+    context.checking(new Expectations() {{
+      exactly(1).of(bill).addBillItem(caller, callee, cost);
+    }});
+    call.charge();
+  }
+  @Test
+  public void callEndingWhenOffPeakChargedPeak() {
+    clock.setClockStart(LocalTime.of(9, 30));
+    call.start();
+    clock.advanceTime(12, HOURS);
+    call.end();
+    Long cost = clock.getDuration() * call.getPeakRate();
+    context.checking(new Expectations() {{
+      exactly(1).of(bill).addBillItem(caller, callee, cost);
+    }});
+    call.charge();
+  }
+
+
+  @Test
+  public void callSurroundingPeakHoursChargedPeak() {
     clock.setClockStart(LocalTime.of(8, 30));
     call.start();
     clock.advanceTime(12, HOURS);
     call.end();
-    Long cost = clock.getDuration() * call.getOffPeakRate();
+    Long cost = clock.getDuration() * call.getPeakRate();
     context.checking(new Expectations() {{
       exactly(1).of(bill).addBillItem(caller, callee, cost);
     }});
