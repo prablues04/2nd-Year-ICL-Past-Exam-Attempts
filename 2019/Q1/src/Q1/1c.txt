@@ -1,0 +1,10 @@
+For part 1b, I created interfaces for the clock and billing system. This allowed me to create
+ an anonymous class implementing a shared clock interface during testing. This anonymous class
+ simulated advancements in time so testing occurs in milliseconds rather than long amounts of time.
+ The decorator pattern was used via the SystemClock class which is used for the standard
+ representation of time using LocalTime. An interface for the billing system allowed the object to
+ be mocked. Both interfaces were added within the constructor for PhoneCall. Peak and off peak rates
+ were also made package-private via getters implemented in PhoneCall for testing.
+
+The testing itself occured by calculating the real cost of a phone call and checking that the same
+cost was indeed passed on to the billing system when the charge method was called.
