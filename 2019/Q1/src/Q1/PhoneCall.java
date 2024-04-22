@@ -44,10 +44,14 @@ public class PhoneCall {
     }
   }
 
+  private long duration() {
+    return MINUTES.between(startTime, endTime) + 1;
+  }
+
   // package private for testing
   long getPeakRate() {return PEAK_RATE;}
 
-  private long duration() {
-    return MINUTES.between(startTime, endTime) + 1;
+  long getOffPeakRate() {
+    return OFF_PEAK_RATE;
   }
 }

@@ -38,6 +38,57 @@ public class PhoneCallTest {
   }
 
   @Test
+  public void callStartingBeforePeakChargedOffPeak() {
+    clock.setClockStart(LocalTime.of(8, 30));
+    call.start();
+    clock.advanceTime(3, HOURS);
+    call.end();
+    Long cost = clock.getDuration() * call.getOffPeakRate();
+    context.checking(new Expectations() {{
+      exactly(1).of(bill).addBillItem(caller, callee, cost);
+    }});
+    call.charge();
+  }
+
+  @Test
+  public void callEndingWhenOffPeakChargedOffPeak() {
+    clock.setClockStart(LocalTime.of(9, 30));
+    call.start();
+    clock.advanceTime(12, HOURS);
+    call.end();
+    Long cost = clock.getDuration() * call.getOffPeakRate();
+    context.checking(new Expectations() {{
+      exactly(1).of(bill).addBillItem(caller, callee, cost);
+    }});
+    call.charge();
+  }
+
+  @Test
+  public void callOnlyInOffPeakChargedForOffPeak() {
+    clock.setClockStart(LocalTime.of(6, 30));
+    call.start();
+    clock.advanceTime(2, HOURS);
+    call.end();
+    Long cost = clock.getDuration() * call.getOffPeakRate();
+    context.checking(new Expectations() {{
+      exactly(1).of(bill).addBillItem(caller, callee, cost);
+    }});
+    call.charge();
+  }
+
+  public void callSurroundingPeakHoursChargedOffPeak() {
+    clock.setClockStart(LocalTime.of(8, 30));
+    call.start();
+    clock.advanceTime(12, HOURS);
+    call.end();
+    Long cost = clock.getDuration() * call.getOffPeakRate();
+    context.checking(new Expectations() {{
+      exactly(1).of(bill).addBillItem(caller, callee, cost);
+    }});
+    call.charge();
+  }
+
+  @Test
   public void exampleOfHowToUsePhoneCall() throws Exception {
 
     PhoneCall call = new PhoneCall("+447770123456", "+4479341554433", new SystemClock(),
