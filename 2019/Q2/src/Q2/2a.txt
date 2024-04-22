@@ -1,0 +1,11 @@
+(2a)
+(i) Separation of model from view and controller allows reuse of the view or model in other projects
+ with different views/models (reuse)
+
+(ii) Separating view from controller from model distinguishes between functions clearly and allows
+delegation of tasks better into frontend and backend. Additionally, this allows testing of the
+view, model and controller in isolation from each other.
+
+(iii) The Preservation Abstraction Control model is an alternative and creates a hierarchical
+tree-like structure of multiple MVC agents instead of a single MVC design.
+
