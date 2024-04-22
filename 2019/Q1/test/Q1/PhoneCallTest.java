@@ -50,6 +50,21 @@ public class PhoneCallTest {
     call.charge();
   }
 
+  // Ignoring overnight calls as LocalTime does not carry forward past midnight
+//  @Test
+//  public void overnightOffPeakCallChargedOffPeak() {
+//    clock.setClockStart(LocalTime.of(19, 30));
+//    call.start();
+//    clock.advanceTime(10, HOURS);
+//    call.end();
+//    Long cost = clock.getDuration() * call.getOffPeakRate();
+//    System.out.println(cost.toString());
+//    context.checking(new Expectations() {{
+//      exactly(1).of(bill).addBillItem(caller, callee, cost);
+//    }});
+//    call.charge();
+//  }
+
 // Tests for part 1b:
 //  @Test
 //  public void callStartingBeforePeakChargedOffPeak() {

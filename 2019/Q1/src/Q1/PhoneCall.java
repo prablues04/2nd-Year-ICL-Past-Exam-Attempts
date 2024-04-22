@@ -9,6 +9,10 @@ public class PhoneCall {
   private static final long PEAK_RATE = 25;
   private static final long OFF_PEAK_RATE = 10;
 
+  private static final LocalTime PEAK_HOURS_START = LocalTime.of(9, 00);
+  private static final LocalTime PEAK_HOURS_END = LocalTime.of(18, 00);
+
+
   private final String caller;
   private final String callee;
   private final AnyClock clock;
@@ -37,12 +41,20 @@ public class PhoneCall {
   }
 
   private long priceInPence() {
-    if (startTime.isAfter(LocalTime.of(9, 00)) && endTime.isBefore(LocalTime.of(18, 00))) {
-      return duration() * PEAK_RATE;
-    } else {
+    boolean beforePeakStart = startTime.isBefore(PEAK_HOURS_START);
+    boolean afterPeakEnd = startTime.isAfter(PEAK_HOURS_END);
+    if ((beforePeakStart || afterPeakEnd)
+        && duration() < durationBetween(startTime,PEAK_HOURS_START)) {
       return duration() * OFF_PEAK_RATE;
+    } else {
+      return duration() * PEAK_RATE;
     }
   }
+
+  private long durationBetween(LocalTime t1, LocalTime t2) {
+    return MINUTES.between(t1, t2);
+  }
+
 
   private long duration() {
     return MINUTES.between(startTime, endTime) + 1;
