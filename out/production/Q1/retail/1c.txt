@@ -1,4 +1,0 @@
-(1c)
-(i) CreditCardProcessor uses the singleton pattern
-(ii) Since there is only one instance of the class, we have to use the same instance everywhere
-including for testing. But we do not want to use real transactions/charges in this case for testing.
