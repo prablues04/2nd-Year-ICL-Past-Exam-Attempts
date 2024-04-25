@@ -1,0 +1,9 @@
+(1b)
+(i) A command from one class to another is an order to execute a function with side effects without
+expecting to get a response/return value. A query typically should not have side effects but rather
+has two way a communication - a request from one class to another (usually for data/information),
+and a response with data.
+(ii) warehouse.dispatch(...) is a command whereas warehouse.checkStockLevel(...) is a query.
+(iii) Behaviour of methods in other classes can be assumed to be correct and logic can be separated
+into different classes on the assumption each class behaves as expected
+(iv)
