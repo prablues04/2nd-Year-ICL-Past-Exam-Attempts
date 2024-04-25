@@ -16,7 +16,11 @@ public class AlgoTrader {
   private final Map<TickerSymbol, Integer> lastPrices = new HashMap<>();
   private final SimpleBroker broker = new SimpleBroker();
 
-  private final DataFeed df = new LSEDataFeedAdapter();
+  private final DataFeed df;
+
+  public AlgoTrader(DataFeed df) {
+    this.df = df;
+  }
 
   public void trade() {
 
@@ -47,7 +51,7 @@ public class AlgoTrader {
   }
 
   public static void main(String[] args) {
-    new AlgoTrader().start();
+    new AlgoTrader(new LSEDataFeedAdapter()).start();
   }
 
   // code below here is not important for the exam
