@@ -1,0 +1,5 @@
+(2a) Singleton pattern for stock market data seen in the following line:
+"StockPrice price = StockMarketDataFeed.getInstance().currentPriceFor(stock);"
+
+(2b) (i) Use the adapter pattern to cover third party apis
+(ii) Hexagonal Architecture

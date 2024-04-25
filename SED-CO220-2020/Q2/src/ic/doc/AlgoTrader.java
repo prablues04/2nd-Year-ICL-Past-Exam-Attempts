@@ -1,7 +1,5 @@
 package ic.doc;
 
-import com.londonstockexchange.StockMarketDataFeed;
-import com.londonstockexchange.StockPrice;
 import com.londonstockexchange.TickerSymbol;
 import java.util.HashMap;
 import java.util.List;
@@ -18,11 +16,13 @@ public class AlgoTrader {
   private final Map<TickerSymbol, Integer> lastPrices = new HashMap<>();
   private final SimpleBroker broker = new SimpleBroker();
 
+  private final DataFeed df = new LSEDataFeedAdapter();
+
   public void trade() {
 
     for (TickerSymbol stock : stocksToWatch) {
 
-      StockPrice price = StockMarketDataFeed.getInstance().currentPriceFor(stock);
+      Price price = df.currentPriceFor(stock);
 
       if (isRising(stock, price)) {
         broker.buy(String.valueOf(stock));
@@ -36,12 +36,12 @@ public class AlgoTrader {
     }
   }
 
-  private boolean isFalling(TickerSymbol stock, StockPrice price) {
+  private boolean isFalling(TickerSymbol stock, Price price) {
     int lastPrice = lastPrices.containsKey(stock) ? lastPrices.get(stock) : 0;
     return price.inPennies() < lastPrice;
   }
 
-  private boolean isRising(TickerSymbol stock, StockPrice price) {
+  private boolean isRising(TickerSymbol stock, Price price) {
     int lastPrice = lastPrices.containsKey(stock) ? lastPrices.get(stock) : Integer.MAX_VALUE;
     return price.inPennies() > lastPrice;
   }
@@ -52,7 +52,7 @@ public class AlgoTrader {
 
   // code below here is not important for the exam
 
-  private void logPrices(TickerSymbol stock, StockPrice price, int lastPrice) {
+  private void logPrices(TickerSymbol stock, Price price, int lastPrice) {
     System.out.println(
         String.format("%s used to be %s, now %s ", stock, lastPrice, price.inPennies()));
   }
