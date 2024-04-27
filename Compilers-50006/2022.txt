@@ -1,0 +1,172 @@
+Compilers 2022
+Start: 21:55
+End: 10:55
+
+(1a) 
+Cannot draw in text, construct DFA with 3 nodes and 3 edges. Node connections defined by triples are:
+({0},{0,1},g)
+({0},{0,2},h)
+({0,1},{0,2},g)
+
+(1b)
+(i) 1112331222:
+1112 -> B
+33 -> C
+1222 -> B
+
+Answer: BCB
+
+(ii) 32123:
+3 -> C
+212 -> B
+3 -> C
+
+Answer: CBC
+
+(iii) 322213:
+3 -> C
+222 -> B
+1 -> X
+3 -> C
+
+Answer: CBXC
+
+(c)
+(i) 
+4 shortest strings:
+word
+word and word
+word , word , and word
+word , word , word , and word
+
+(ii) A grammar is LL(1) if for any rule A, which can be broken into alternative sequences a and b, FIRST(a) and FIRST(b) are disjoint. The rule for L can be split into three alternations:
+word
+word and word
+F, word, and word
+
+The first sets of all three = {word}. So the first sets of the alternations for the rule are not disjoint (hence not LL(1))
+
+L -> word [ [ , word , { word , } ]  and word ]
+
+(d)
+(i) 
+The transition from 0 to 1 is G' -> G. The transitions from 0 to 2, and 0 to 3 indicate the two rules start with two different characters. So for now take G -> x<missing> and G -> y<missing>.
+
+Note that 3 is a terminal state. So no transitions follow this, so one of the rules only has one terminal on the right side of the rule. Let G -> y.
+
+There is a transition from 4 to the terminal state at 3 as well as back 2. This divergence at 4 suggests that the rule is used recursively, as there are multiple pathways. Hence the first rule now looks like G -> xG<missing>. If the next token is a y, we transition to state 3. If it is an x we must move back to 2. There is no path from 4 to itself, so the non-terminal G cannot be repeated in the RHS at this stage of the parsing. Since there exists a 5th state we transition to, the next token cannot be an x or a y (because the DFA is deterministic, there cannot be multiple transitions with the same token). So the final token must be z.
+
+So the two rules we have are:
+G -> xGz
+G -> y
+
+(ii)
+For 0:
+G' -> . G
+G -> . x G z
+G -> .y
+
+For 1:
+G' -> G .
+
+For 2:
+
+G -> x . G z
+
+For 3:
+G -> y .
+
+For 4:
+
+G -> x G . z
+G -> . x G z
+G -> . y
+
+For 5:
+G -> z .
+
+(e)
+(i)
+I am assuming there is only one heap allocated variable at any point, n, i.e. k and maxint are defined on the stack (though maxint may be global).
+
+Two space garbage collection would be the fastest
+
+Throughout the loop iteration reference counting would free variables on every loop iteration, which would be inefficient due to garbage collection overhead. Mark-sweep would free all heap allocated variables periodically, and would iterate through all the variables twice.
+
+Two-space collection on the other hand, only comes into play when half the heap space has been allocated and there is no more space. In one single go, it will then compact the heap from the from-space to the to-space, thus giving almost an entire half of the heap space to allocated to again.
+
+As this loop, will never really run out of heap space, since there is only one heap allocated variable at any given time, two-space is quickest due to the fact it is less frequent, meaning there are fewer overheads from garbage collection. Also locality of heap allocated data, together in the from-space will speed up the freeing process as the live heap block is copied to the to-space.
+
+(ii)
+Reference counting:
+Only one Num object will be allocated at any given time, at the start of the next iteration, it is no longer live, but is referenced, so the reassignment causes deallocation of the current heap allocated block, while the next one is allocated.
+
+Mark and Sweep:
+This depends on the exact implementation. Mark and sweep is either performed in cycles such as regular time intervals, so this depends on the intervals chosen. At a best case it can hold x objects (though it would require two traversals of the blocks to clear), but it is likely to be a lot less. 
+
+Two space:
+Two space allocates up to x/2 blocks in one go, before running out of memory in its block, before compacting it and repeating this in the to-space.
+
+
+(Q2)
+(a) 
+t1 = e + 1
+t2 = d - 1
+t3 = t1 * t2
+t4 = b - c
+a = t4 / t3
+
+(b)
+(i)
+liveOut(S9) is the set of variables which are used along any path from S9 and are given by the variables which are liveIn at all the successors to S9. The successors of S9 are the lines S6 and S10.
+
+LiveOut(S10) \ defs(S10) = {}
+LiveIn(S10) = {r}
+
+LiveIn(S6) = uses(S6) union (LiveOut(S6) \ defs(S6))
+	   = {i} union ( {a, b} union ( ... \ {r} ) \ {} )
+
+LiveIn(S7) = {a, b} union ( ... \ {r} )
+LiveIn(S8) = {r} union (... \{A})
+LiveIn(S9) = {i} union {LiveOut(S9) \ defs(S9)}
+
+Calculating the LiveOuts and LiveIns results in:
+LiveOut(S6) = {i, a, b}
+
+LiveOut(S9) = {i, a, b, r}
+
+(ii)
+ReachIn(S7) = {S6, S4, S5, S1, S2, S3, S7 S8, S9} as any of these definitions can reach a point p before S7 without being killed. S7 is included as it can reach a point p before itself even though it is eventually killed by its own assignment.
+
+(iii)
+The relevant reaching definitions for S7 are {S1, S2, S5} corresponding to variables a and b and immediate value B as all of these are on the RHS of assignments to r and in the ReachIn set for S7.
+
+(iv)
+Line S7 is invariant as all its relevant reaching definitions (i.e. all its operands) are outside the loop. This means it can be defined outside the loop by the same variables without having to be reassigned on each iteration to the same constant value.
+
+(v) No, because there is a chance the input a >= 10, in which case the loop will not be entered. If this happens, then we should return 0, from S5 - r = a/b.
+
+(vi) 
+Relevant Reaching Definitions for S10:
+{S5, S7}
+
+(vii) 
+SSA would split assignments of r into r_1 for S5 and r_2 for S7. This would allow r_2 to be hoisted out of the loop. We will then define a third r_3 which is set to r_1 if the r_1 pathway is followed, and r_2 if the r_2 pathway is followed. This allows us to create a conditional which sets r_3 to r_2 if a < 10, or to r_1 otherwise. e.g:
+"int t_3 = a < 10 ? r_2 : r_1"
+This only takes one line reducing the relevant reaching definitions of S10 to 1.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,160 @@
+COMP50005 2023 Past Paper
+Start: 16:20
+End: 17:50
+
+(Q1)
+(a)
+(i)
+PAN (personal area network)
+(ii)
+telnet <website domain name> 80
+(iii)
+IP address
+(iv)
+NAT
+
+(b)
+   U = (L/R)/(RTT + (L/R))
+=> RTT + L/R = (L/R)/U
+=> RTT = L/(R*U) - L/R
+
+R = 1 * 10^9 Gbps
+L = 65535 bytes = 524280 bits
+U = 0.0026
+
+L/R = 0.00052428
+
+So RTT = 0.00052428*(1/0.0026 - 1)
+       = 0.201121874...s
+       = 201.1 ms (4.s.f)
+       
+(c)
+To prevent hosts from receiving conflicting IP addresses, the router employs DHCP (Domain Host Configuration Protocol). Every newly-booted machine broadcasts a DHCP DISCOVER packet and the router replies with an IP address for the device. It maintains a map of IP addresses within its subnet to avoid dealing conflicting addresses. Devices/NICs are identified instead by their MAC address which is typically assigned at the manufacturing stage, while their IP address is yet to be configured. So spoofing the MAC address works into gaining WiFi access, as the router/ Layer 3 Wireless Access Point sees the laptop as a new device in the network. So asking the router for an IP address via DHCP will give it a new IP address in the subnet and allows the device to accses the internet.
+
+(d)
+(i) 
+c (speed of light) = lambda (wavelength) * f (frequency)
+c ~= 3*10^8 m/s
+frequency = 0.06 MHz = 60000Hz
+wavelength = distance from house = (3*10^8)/60000 	(=c/f)
+				 = 5000m
+				 = 5km
+(ii) 
+We are told the autonomous AI drones are wifi-internetworked. So assuming they communicate with each other on radiowave/microwave frequencies, collecting microwave ovens and modifying them can allow the survivors to create and broadcast interfering microwave signals around the stronghold. The superposition of interfering radio/microwaves can disrupt the communication between drones, preventing them from effectively communicating within the swarm to attack the stronghold.
+
+(e)
+Let's first look at the case of the first subnet.
+- 0.0.0.0/16 is the first subnet
+- 0.0.0.0 is reserved as the network address and is used by a gateway drone
+- 0.0.255.255 is the last address in the subnet and is reserved for broadcast address of the subnet. 
+The total number of addresses in the subnet are 2^16. But the number of useable addresses for weaponised drones is 2^16 - 2.
+
+Since the first 16 bits are prefix bits, there are 2^16 possible subnets, each with 2^16 - 2 drones.
+So number of useable addresses for weaponised drones is (2^16)*(2^16 - 2) = 4,294,836,224 weaponised drones.
+
+(2)
+(a)
+1 => A
+2 => B
+3 => B
+4 => A
+5 => A
+6 => B
+7 => CCCC
+8 => CC
+9 => B
+10 => A
+11 => A
+12 => B
+13 => B
+14 => A
+15 => B
+16 => A
+17 => A
+18 => B
+
+(b)
+TDM stands for Time Division Multiplexing and involves creating multiple channels of communication divided by set time intervals. So each station in a given channel is only allow permitted to transmit a message within its time interval. An example of this is given by Slotted Aloha where channels are divided into specific time intervals. One station/survivor can communicate with another on the same chanel only at the start of their time interval and the other survivor/station has to wait until the start of the next time interval allocated to the channel to reply. This improves channel efficiency and prevents overlap in communications with survivors on different channels, allowing e.g. multiple outposts strategically located in different areas around the stronghold without warnings interfering with each other.
+
+(c) Throughput is typically unit data (usually bits) processed per unit time (usually in seconds). Assuming this is an "average" day with exactly 400 patients being treated:
+
+The time spent on treatment, assuming no breaks (i.e. working every minute from 06:00 to 22:00), was (22-6) * 60 minutes = 1080 minutes. Treating 400 patients in this time indicates the average throughput was 400/1080 = 10/27 
+	= 0.3704 patients / minute (4.s.f)
+
+(Also assume that we do not include hours 00:00 to 06:00 and 22:00 to 00:00 the next day) (Although hypothetically, the throughput in these hours is zero).
+
+(d) 
+
+Use physical locks and keys to protect the treasure room.
+
+Apply the principle of least privelege - only disclose the existence of the treasure room to those who are fully trusted, and create a policy of with whom this information can be shared. For those who can be trusted, request/employ people to take shifts in guarding the treasure room (this assumes people are willing to sacrifice their time to help you). This can be used in conjunction with physical locks - if there is someone who can be fully trusted, you could use a dual lock (with one key for yourself and one key for the trustee) such that both keys are required to enter the treasure room
+
+Assuming access to non-lethal defence measures such as tranquilisers, place strategic booby traps to tranquilise anyone who falls into them. This is like a private key, which you hold since you know where the booby trap is, but anyone else does not have the private key and may fail in gaining access to the treasure room.
+
+Implement a clear policy of how and when the room can be accessed - for example, create a protocol to check certain locations on the path to the treasure room to ensure you are not followed, as well as a schedule of possible cover stories/alibis for when you want to visit the room.
+
+(e) 
+Mesh Network - Data Link Layer
+IPv4 - Network Layer
+TCP-like protocol - Transport Layer
+TDM - Data Link Layer
+
+This would be the job of a network security engineer. who is on the development team for the drone. This would involve research into what kind of interactions between drones may indicate they are going rogue (perhaps through simulation) and would also involve sniffing the packets sent between drones to identify unexpected/rogue transmissions. This would involve collaborating with AI researchers whose job is to get the drones to behave as expected, because the packets sent by the drones is dependent on their expected behaviour - collaboration is required to understand whether packets being transmitted satisfy this behaviour.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
