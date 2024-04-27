@@ -1,0 +1,332 @@
+(1a) 
+(i)
+Factory method
+
+(ii)
+Singleton Pattern
+
+(b)
+Excluding Imports for Conciseness:
+
+Code For "Flight" Abstract Class which also abstracts each individual method where possible:
+
+abstract class Flight {
+  public Flight(
+      FlightNumber flightNumber, LocalDate date, Airport origin, Airport destination) {
+    this.flightNumber = flightNumber;
+    this.date = date;
+    this.origin = origin;
+    this.destination = destination;
+  }
+
+  protected final FlightNumber flightNumber;
+  protected final LocalDate date;
+  protected final Airport origin;
+  protected final Airport destination;
+
+  public List<Seat> seatingOptions(FrequentFlyerStatus status) {
+    if (date.isBefore(LocalDate.now())) {
+      throw new BookingException("Flight is in the past");
+    }
+    List<Seat> availableSeats = SeatManager.getInstance().getAvailableSeats(flightNumber, date);
+    return filterSeats(status, availableSeats); // Separating into two methods ensures the
+    // subclass has to override the filterSeats method whereas this is not the case if I just
+    // return available seats in this method and override the same method in the subclass
+  }
+
+  protected abstract List<Seat> filterSeats(FrequentFlyerStatus status, List<Seat> availableSeats);
+
+  ;
+
+  public int calculateFare() {
+    return origin.distanceTo(destination) * getPencePerMile() + getStandardFeePence();
+  }
+
+  protected abstract int getPencePerMile();
+
+  protected abstract int getStandardFeePence();
+
+  @Override
+  public String toString() {
+    return "Flight "
+        + flightNumber
+        + " ("
+        + date
+        + ") from "
+        + origin
+        + " to "
+        + destination;
+  }
+
+}
+
+________________________________________________________________________________________________
+________________________________________________________________________________________
+
+Code for BusinessClassFlight:
+
+public class BusinessClassFlight extends Flight {
+
+  private static final int PENCE_PER_MILE = 35;
+  private static final int STANDARD_FEE_PENCE = 8000;
+
+  public BusinessClassFlight(
+      FlightNumber flightNumber, LocalDate date, Airport origin, Airport destination) {
+    super(flightNumber, date, origin, destination);
+  }
+
+  @Override
+  protected List<Seat> filterSeats(FrequentFlyerStatus status, List<Seat> availableSeats) {
+    if (status == FrequentFlyerStatus.ELITE) {
+      // Elite status customers can choose any seat, even in first class.
+      return availableSeats;
+    }
+    return availableSeats.stream().filter(s -> s.cabin() == ServiceLevel.BUSINESS).toList();
+  };
+
+  @Override
+  protected int getPencePerMile() {
+    return PENCE_PER_MILE;
+  }
+
+  @Override
+  protected int getStandardFeePence() {
+    return STANDARD_FEE_PENCE;
+  }
+
+  @Override
+  public String toString() {
+    return super.toString()
+        + " ("
+        + ServiceLevel.BUSINESS
+        + ")";
+  }
+}
+
+__________________________________________________________________________________________
+__________________________________________________________________________________________
+
+Code for Economy Flight:
+
+public class EconomyFlight extends Flight {
+
+  private static final int PENCE_PER_MILE = 15;
+  private static final int STANDARD_FEE_PENCE = 4000;
+
+  public EconomyFlight(
+      FlightNumber flightNumber, LocalDate date, Airport origin, Airport destination) {
+    super(flightNumber, date, origin, destination);
+  }
+
+  @Override
+  protected List<Seat> filterSeats(FrequentFlyerStatus status, List<Seat> availableSeats) {
+    List<Seat> allAvailableEconomySeats =
+        availableSeats.stream().filter(s -> s.cabin() == ServiceLevel.ECONOMY).toList();
+    return switch (status) {
+      case BASIC -> pickOneAtRandomFrom(allAvailableEconomySeats);
+      case SILVER, ELITE -> allAvailableEconomySeats;
+    };
+  }
+
+  @Override
+  protected int getPencePerMile() {
+    return PENCE_PER_MILE;
+  }
+
+  @Override
+  protected int getStandardFeePence() {
+    return STANDARD_FEE_PENCE;
+  }
+
+  private List<Seat> pickOneAtRandomFrom(List<Seat> allAvailableEconomySeats) {
+    int randomPositionInList = (int) (Math.random() * (allAvailableEconomySeats.size() - 1));
+    return Collections.singletonList(allAvailableEconomySeats.get(randomPositionInList));
+  }
+
+  @Override
+  public String toString() {
+    return super.toString()
+        + " ("
+        + ServiceLevel.ECONOMY
+        + ")";
+  }
+}
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+(1c)
+Once again, assume all imports have been made. The following code allows us to test the BusinessClassFlight in isolation without invoking SeatManager as we can mock the AnySeatManager interface which is now passed into the constructor for Flight.
+
+Code for SeatManagerAdapter:
+
+public class SeatManagerAdapter implements AnySeatManager {
+  @Override
+  public List<Seat> getAvailableSeats(FlightNumber fn, LocalDate date) {
+    return SeatManager.getInstance().getAvailableSeats(fn, date);
+  }
+}
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+Code for AnySeatManager:
+
+public interface AnySeatManager {
+  List<Seat> getAvailableSeats(FlightNumber fn, LocalDate date);
+}
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+
+Change Made to Abstract Class, Flight (add additional constructor parameter and field, and use this in the seatingOptions function):
+
+public Flight(FlightNumber flightNumber, LocalDate date, Airport origin, Airport 		destination, AnySeatManager sm) {
+    this.flightNumber = flightNumber;
+    this.date = date;
+    this.origin = origin;
+    this.destination = destination;
+    this.sm = sm;
+}
+
+protected final AnySeatManager sm;
+
+....
+
+
+public List<Seat> seatingOptions(FrequentFlyerStatus status) {
+    if (date.isBefore(LocalDate.now())) {
+      throw new BookingException("Flight is in the past");
+    }
+    List<Seat> availableSeats = sm.getAvailableSeats(flightNumber, date);
+    return filterSeats(status, availableSeats); // Separating into two methods ensures the
+    // subclass has to override the filterSeats method whereas this is not the case if I just
+    // return available seats in this method and override the same method in the subclass
+  }
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+Change passed on to constructor for BusinessClassFlight:
+
+public BusinessClassFlight(
+      FlightNumber flightNumber, LocalDate date, Airport origin, Airport destination,
+      AnySeatManager sm) {
+    super(flightNumber, date, origin, destination, sm);
+  }
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+(1d)
+
+public class BusinessClassFlightTest {
+
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
+  private AnySeatManager seatManager = context.mock(AnySeatManager.class);
+  private FlightNumber fn = FlightNumber.of("BA175");
+  private LocalDate date = LocalDate.of(2025, 6, 30);
+  private BusinessClassFlight flight = new BusinessClassFlight(fn, date, Airport.LHR, Airport.JFK,
+      seatManager);
+  private Seat businessSeat = new Seat("10B",
+      ServiceLevel.BUSINESS);
+  private List<Seat> availableSeats = List.of(new Seat("33A", ServiceLevel.ECONOMY), businessSeat,
+      new Seat("1A", ServiceLevel.FIRST));
+
+  @Test
+  public void eliteStatusPassengersChooseAnySeat() {
+    FrequentFlyerStatus status = FrequentFlyerStatus.ELITE;
+    context.checking(new Expectations() {{
+      exactly(1).of(seatManager).getAvailableSeats(fn, date);
+      will(returnValue(availableSeats));
+    }});
+    List<Seat> seatResults = flight.seatingOptions(status);
+    assertThat(seatResults, is(availableSeats));
+  }
+
+  @Test
+  public void otherBusinessPassengersOnlySeeBusinessClassSeats() {
+    FrequentFlyerStatus status = FrequentFlyerStatus.SILVER;
+    context.checking(new Expectations() {{
+      exactly(1).of(seatManager).getAvailableSeats(fn, date);
+      will(returnValue(availableSeats));
+    }});
+    List<Seat> seatResults = flight.seatingOptions(status);
+    assertThat(seatResults, is(List.of(businessSeat)));
+  }
+
+  @Test
+  public void searchForSeatsInAPastFlightThrowsAnError() {
+    FrequentFlyerStatus status = FrequentFlyerStatus.BASIC;
+    LocalDate invalidDate = LocalDate.of(2022,10,10);
+    BusinessClassFlight invalidFlight = new BusinessClassFlight(fn, invalidDate, Airport.LHR, Airport.JFK,
+        seatManager);
+    context.checking(new Expectations() {{
+      exactly(0).of(seatManager).getAvailableSeats(fn, invalidDate);
+    }});
+    try {
+      invalidFlight.seatingOptions(status);
+    } catch (BookingException ignored) {}
+  }
+
+}
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+
+
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
