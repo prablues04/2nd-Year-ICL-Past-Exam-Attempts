@@ -295,32 +295,406 @@ public class BusinessClassFlightTest {
 _____________________________________________________________________________________________
 _____________________________________________________________________________________________
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
 
+(1a)
+Testing Code:
+
+public class ArticleRepositoryTest {
+
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
+  private final Summariser summariser = context.mock(Summariser.class);
+  private final Article article = new Article("testing supremacy");
+  private final ArticleRepository repo = new ArticleRepository(summariser);
+
+  @Test
+  public void onPublicationArticlesAreSummarisedToExtractKeywords() {
+    context.checking(new Expectations() {{
+      exactly(1).of(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+    }});
+    repo.publish(article);
+  }
+}
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+IMPLEMENTATION:
+
+ArticleRepository:
+public class ArticleRepository {
+  private final Summariser summariser;
+
+  public ArticleRepository(Summariser summariser) {
+    this.summariser = summariser;
+  }
+
+  public void publish(Article article) {
+    summariser.summarise(article);
+  }
+}
+
+
+Summariser:
+public interface Summariser {
+  List<String> summarise(Article article);
+}
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+(1b)
+Tests:
+
+public class ArticleRepositoryTest {
+
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
+  private final Summariser summariser = context.mock(Summariser.class);
+  private final Subscriber alice = context.mock(Subscriber.class, "alice");
+  private final Subscriber bob = context.mock(Subscriber.class, "bob");
+  private final Article article = new Article("testing supremacy");
+  private final ArticleRepository repo = new ArticleRepository(summariser);
+
+  @Test
+  public void onPublicationArticlesAreSummarisedToExtractKeywords() {
+    context.checking(new Expectations() {{
+      exactly(1).of(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+    }});
+    repo.publish(article);
+  }
+
+  @Test
+  public void subscribersWithMatchingInterestsAreNotifiedOnPublicationOfANewArticle() {
+    context.checking(new Expectations() {{
+      ignoring(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+      exactly(1).of(alice).alert();
+      exactly(1).of(bob).alert();
+    }});
+    repo.subscribeToTopic(alice, "Java");
+    repo.subscribeToTopic(bob, "testing");
+    repo.publish(article);
+  }
+}
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+Implementation:
+
+public class ArticleRepository {
+  private final Summariser summariser;
+  private final Map<Subscriber, HashSet<String>> subscribers;
+
+  public ArticleRepository(Summariser summariser) {
+    this.summariser = summariser;
+    this.subscribers = new HashMap<>();
+  }
+
+  public void publish(Article article) {
+    List<String> keywords = summariser.summarise(article);
+    for (Subscriber s: subscribers.keySet()) {
+      Set<String> subscriberWords = subscribers.get(s);
+      for (String word : keywords) {
+        if (subscriberWords.contains(word)) {
+          s.alert();
+        }
+      }
+    }
+  }
+
+  public void subscribeToTopic(Subscriber subscriber, String keyword) {
+    if (subscribers.containsKey(subscriber)) {
+      subscribers.get(subscriber).add(keyword);
+    } else {
+      subscribers.put(subscriber, new HashSet<>(Set.of(keyword)));
+    }
+  }
+}
 
 
 _____________________________________________________________________________________________
 _____________________________________________________________________________________________
 
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+(1c)
+public class ArticleRepositoryTest {
+
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
+  private final Summariser summariser = context.mock(Summariser.class);
+  private final Subscriber alice = context.mock(Subscriber.class, "alice");
+  private final Subscriber bob = context.mock(Subscriber.class, "bob");
+  private final Article article = new Article("testing supremacy");
+  private final Article article2 = new Article("testing supremacy 2");
+
+  private final ArticleRepository repo = new ArticleRepository(summariser);
+
+  @Test
+  public void onPublicationArticlesAreSummarisedToExtractKeywords() {
+    context.checking(new Expectations() {{
+      exactly(1).of(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+    }});
+    repo.publish(article);
+  }
+
+  @Test
+  public void subscribersWithMatchingInterestsAreNotifiedOnPublicationOfANewArticle() {
+    context.checking(new Expectations() {{
+      ignoring(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+      exactly(1).of(alice).alert();
+      exactly(1).of(bob).alert();
+    }});
+    repo.subscribeToTopic(alice, "testing");
+    repo.subscribeToTopic(alice, "Java");
+    repo.subscribeToTopic(bob, "testing");
+    repo.publish(article);
+  }
+
+  @Test
+  public void subscribersWithOutMatchingInterestsAreNotNotifiedOnPublicationOfANewArticle() {
+    context.checking(new Expectations() {{
+      ignoring(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Python")));
+      exactly(0).of(alice).alert();
+      exactly(1).of(bob).alert();
+    }});
+    repo.subscribeToTopic(alice, "Java");
+    repo.subscribeToTopic(bob, "testing");
+    repo.publish(article);
+  }
+}
 
 
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+No changes to implementation
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+(1d)
+public class ArticleRepositoryTest {
+
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
+  private final Summariser summariser = context.mock(Summariser.class);
+  private final Subscriber alice = context.mock(Subscriber.class, "alice");
+  private final Subscriber bob = context.mock(Subscriber.class, "bob");
+  private final Article article = new Article("testing supremacy");
+  private final Article article2 = new Article("testing supremacy 2");
+
+  private final ArticleRepository repo = new ArticleRepository(summariser);
+
+  @Test
+  public void onPublicationArticlesAreSummarisedToExtractKeywords() {
+    context.checking(new Expectations() {{
+      exactly(1).of(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+    }});
+    repo.publish(article);
+  }
+
+  @Test
+  public void subscribersWithMatchingInterestsAreNotifiedOnPublicationOfANewArticle() {
+    context.checking(new Expectations() {{
+      ignoring(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+      exactly(1).of(alice).alert();
+      exactly(1).of(bob).alert();
+    }});
+    repo.subscribeToTopic(alice, "testing");
+    repo.subscribeToTopic(alice, "Java");
+    repo.subscribeToTopic(bob, "testing");
+    repo.publish(article);
+  }
+
+  @Test
+  public void subscribersWithOutMatchingInterestsAreNotNotifiedOnPublicationOfANewArticle() {
+    context.checking(new Expectations() {{
+      ignoring(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Python")));
+      exactly(0).of(alice).alert();
+      exactly(1).of(bob).alert();
+    }});
+    repo.subscribeToTopic(alice, "Java");
+    repo.subscribeToTopic(bob, "testing");
+    repo.publish(article);
+  }
+  
+  @Test
+  public void subscribersWithMultipleMatchingInterestsAreOnlyNotifiedOncePerArticle() {
+    context.checking(new Expectations() {{
+      ignoring(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+      exactly(1).of(alice).alert();
+      exactly(1).of(bob).alert();
+    }});
+    repo.subscribeToTopic(alice, "Java");
+    repo.subscribeToTopic(alice, "testing");
+    repo.subscribeToTopic(bob, "testing");
+    repo.publish(article);
+  }
+}
 
 
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+Modify the publish method to include a break:
+
+  public void publish(Article article) {
+    List<String> keywords = summariser.summarise(article);
+    for (Subscriber s: subscribers.keySet()) {
+      Set<String> subscriberWords = subscribers.get(s);
+      for (String word : keywords) {
+        if (subscriberWords.contains(word)) {
+          s.alert();
+          break;
+        }
+      }
+    }
+  }
+
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
+
+(1e) 
+public class ArticleRepositoryTest {
+
+  @Rule
+  public JUnitRuleMockery context = new JUnitRuleMockery();
+  private final Summariser summariser = context.mock(Summariser.class);
+  private final Subscriber alice = context.mock(Subscriber.class, "alice");
+  private final Subscriber bob = context.mock(Subscriber.class, "bob");
+  private final Article article = new Article("testing supremacy");
+  private final Article article2 = new Article("testing supremacy 2");
+
+  private final ArticleRepository repo = new ArticleRepository(summariser);
+
+  @Test
+  public void onPublicationArticlesAreSummarisedToExtractKeywords() {
+    context.checking(new Expectations() {{
+      exactly(1).of(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+    }});
+    repo.publish(article);
+  }
+
+  @Test
+  public void subscribersWithMatchingInterestsAreNotifiedOnPublicationOfANewArticle() {
+    context.checking(new Expectations() {{
+      ignoring(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+      exactly(1).of(alice).alert();
+      exactly(1).of(bob).alert();
+    }});
+    repo.subscribeToTopic(alice, "Java");
+    repo.subscribeToTopic(bob, "testing");
+    repo.publish(article);
+  }
+
+  @Test
+  public void subscribersWithOutMatchingInterestsAreNotNotifiedOnPublicationOfANewArticle() {
+    context.checking(new Expectations() {{
+      ignoring(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Python")));
+      exactly(0).of(alice).alert();
+      exactly(1).of(bob).alert();
+    }});
+    repo.subscribeToTopic(alice, "Java");
+    repo.subscribeToTopic(bob, "testing");
+    repo.publish(article);
+  }
 
 
+  @Test
+  public void subscribersWithMultipleMatchingInterestsAreOnlyNotifiedOncePerArticle() {
+    context.checking(new Expectations() {{
+      ignoring(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+      exactly(1).of(alice).alert();
+      exactly(1).of(bob).alert();
+    }});
+    repo.subscribeToTopic(alice, "Java");
+    repo.subscribeToTopic(alice, "testing");
+    repo.subscribeToTopic(bob, "testing");
+    repo.publish(article);
+  }
 
+  @Test
+  public void removingAnInterestNoLongerTriggersAnAlertForThatWord() {
+    context.checking(new Expectations() {{
+      ignoring(summariser).summarise(article);
+      will(returnValue(List.of("testing", "Java")));
+      exactly(1).of(alice).alert();
+      exactly(1).of(summariser).summarise(article2);
+      will(returnValue(List.of("testing", "Python")));
+      exactly(0).of(alice).alert();
+    }});
+    repo.subscribeToTopic(alice, "testing");
+    repo.publish(article);
+    repo.unsubscribe(alice, "testing");
+    repo.publish(article2);
+  }
+}
 
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
 
+Add unsubscribe method in ArticleRepository:
 
+  public void unsubscribe(Subscriber subscriber, String keyword) {
+    subscribers.get(subscriber).remove(keyword);
+  }
 
+_____________________________________________________________________________________________
+_____________________________________________________________________________________________
 
-
-
-
-
-
-
-
-
+DONE (with 3 mins to go :/)
 
 
 
