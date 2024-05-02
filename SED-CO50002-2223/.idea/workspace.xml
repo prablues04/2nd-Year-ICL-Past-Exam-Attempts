@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="0b50c476-8037-48b0-aa7e-a390c75e1791" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Interface" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2fg5vdUXO2jfIiFthyzn3PXWktw" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.Example.executor": "Run",
+    "JUnit.ArticleRepositoryTest.onPublicationArticlesAreSummarisedToExtractKeywords.executor": "Run",
+    "JUnit.ArticleRepositoryTest.removingAnInterestNoLongerTriggersAnAlertForThatWord.executor": "Run",
+    "JUnit.ArticleRepositoryTest.subscribersWithMatchingInterestsAreNotifiedOnPublicationOfANewArticle.executor": "Run",
+    "JUnit.ArticleRepositoryTest.subscribersWithMultipleMatchingInterestsAreOnlyNotifiedOncePerArticle.executor": "Run",
+    "JUnit.ArticleRepositoryTest.subscribersWithOutMatchingInterestsAreNotNotifiedOnPublicationOfANewArticle.executor": "Run",
+    "JUnit.ArticleRepositoryTest.subscribersWithoutMatchingInterestsAreNotNotifiedonPublication.executor": "Run",
+    "JUnit.BusinessClassFlightTest.eliteStatusPassengersChooseAnySeat.executor": "Run",
+    "JUnit.BusinessClassFlightTest.executor": "Run",
+    "JUnit.BusinessClassFlightTest.otherBusinessPassengersOnlySeeBusinessClassSeats.executor": "Run",
+    "JUnit.BusinessClassFlightTest.searchForSeatsInAPastFlightThrowsAnError.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/homes/pv622/Documents/2ndYear/SED/SED_Ex5_pv622",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="publications" />
+      <recent name="bookings" />
+    </key>
+    <key name="ExtractSuperBase.RECENT_KEYS">
+      <recent name="bookings" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.BusinessClassFlightTest.searchForSeatsInAPastFlightThrowsAnError">
+    <configuration name="ArticleRepositoryTest.removingAnInterestNoLongerTriggersAnAlertForThatWord" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Q2" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="publications.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="publications" />
+      <option name="MAIN_CLASS_NAME" value="publications.ArticleRepositoryTest" />
+      <option name="METHOD_NAME" value="removingAnInterestNoLongerTriggersAnAlertForThatWord" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ArticleRepositoryTest.subscribersWithMultipleMatchingInterestsAreOnlyNotifiedOncePerArticle" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Q2" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="publications.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="publications" />
+      <option name="MAIN_CLASS_NAME" value="publications.ArticleRepositoryTest" />
+      <option name="METHOD_NAME" value="subscribersWithMultipleMatchingInterestsAreOnlyNotifiedOncePerArticle" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BusinessClassFlightTest.eliteStatusPassengersChooseAnySeat" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Q1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="bookings.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="bookings" />
+      <option name="MAIN_CLASS_NAME" value="bookings.BusinessClassFlightTest" />
+      <option name="METHOD_NAME" value="eliteStatusPassengersChooseAnySeat" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BusinessClassFlightTest.otherBusinessPassengersOnlySeeBusinessClassSeats" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Q1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="bookings.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="bookings" />
+      <option name="MAIN_CLASS_NAME" value="bookings.BusinessClassFlightTest" />
+      <option name="METHOD_NAME" value="otherBusinessPassengersOnlySeeBusinessClassSeats" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BusinessClassFlightTest.searchForSeatsInAPastFlightThrowsAnError" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Q1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="bookings.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="bookings" />
+      <option name="MAIN_CLASS_NAME" value="bookings.BusinessClassFlightTest" />
+      <option name="METHOD_NAME" value="searchForSeatsInAPastFlightThrowsAnError" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.BusinessClassFlightTest.searchForSeatsInAPastFlightThrowsAnError" />
+        <item itemvalue="JUnit.BusinessClassFlightTest.otherBusinessPassengersOnlySeeBusinessClassSeats" />
+        <item itemvalue="JUnit.BusinessClassFlightTest.eliteStatusPassengersChooseAnySeat" />
+        <item itemvalue="JUnit.ArticleRepositoryTest.removingAnInterestNoLongerTriggersAnAlertForThatWord" />
+        <item itemvalue="JUnit.ArticleRepositoryTest.subscribersWithMultipleMatchingInterestsAreOnlyNotifiedOncePerArticle" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-20.0.2-corretto-20.0.2.1-4caba194b151-d3b95e29" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0b50c476-8037-48b0-aa7e-a390c75e1791" name="Changes" comment="" />
+      <created>1714210111784</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1714210111784</updated>
+      <workItem from="1714210112859" duration="9175000" />
+      <workItem from="1714297076860" duration="504000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
